@@ -1,0 +1,148 @@
+# CeilSense + HLK-LD6002B example configuration.
+#
+# Wiring (CeilSense schematic):
+#   module TX0 -> ESP GPIO15, module RX0 -> ESP GPIO16 (UART, 115200 baud)
+#   module P19/BOOT1 -> ESP GPIO4 (must stay LOW in normal operation)
+#   module TX2 (raw presence) -> ESP GPIO5
+
+esphome:
+  name: ceilsense-ld6002b
+  friendly_name: CeilSense LD6002B
+  includes:
+    - <driver/gpio.h>
+  on_boot:
+    # Keep BOOT1 low from the earliest boot stage so the radar starts in
+    # normal mode. If the radar still does not boot, verify the pulldown.
+    - priority: 1000
+      then:
+        - lambda: |-
+            gpio_set_direction(GPIO_NUM_4, GPIO_MODE_OUTPUT);
+            gpio_set_pull_mode(GPIO_NUM_4, GPIO_PULLDOWN_ONLY);
+            gpio_set_level(GPIO_NUM_4, 0);
+    # The module does not always accept the first command after power-on;
+    # enable target display twice with a delay so tracking data reliably
+    # starts streaming.
+    - priority: -100
+      then:
+        - delay: 5s
+        - switch.turn_on: ld6002b_target_display
+        - delay: 10s
+        - switch.turn_on: ld6002b_target_display
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+external_components:
+  - source: github://smarthomeshop/ld6002b@main
+    components: [ld6002b]
+
+logger:
+  baud_rate: 115200
+  hardware_uart: UART0
+
+api:
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "ceilsense-ld6002b"
+
+captive_portal:
+
+web_server:
+  port: 80
+
+uart:
+  id: uart_ld6002b
+  tx_pin: GPIO16
+  rx_pin: GPIO15
+  baud_rate: 115200
+  parity: NONE
+  stop_bits: 1
+
+ld6002b:
+  id: ld6002b_radar
+  uart_id: uart_ld6002b
+  auto_wake: false
+  throttle: 2s
+  max_data_len: 4096
+
+binary_sensor:
+  - platform: gpio
+    name: "LD6002B TX2 Raw Presence"
+    pin:
+      number: GPIO5
+      mode:
+        input: true
+        pulldown: true
+    device_class: occupancy
+    entity_category: diagnostic
+
+  - platform: ld6002b
+    ld6002b_id: ld6002b_radar
+    target:
+      name: "Presence"
+    target_1:
+      name: "Target 1 Presence"
+    target_2:
+      name: "Target 2 Presence"
+    target_3:
+      name: "Target 3 Presence"
+
+sensor:
+  - platform: ld6002b
+    ld6002b_id: ld6002b_radar
+    target_count:
+      name: "Target Count"
+    point_count:
+      name: "Point Count"
+      entity_category: diagnostic
+    target_1:
+      x:
+        name: "Target 1 X"
+      y:
+        name: "Target 1 Y"
+      z:
+        name: "Target 1 Z"
+    target_2:
+      x:
+        name: "Target 2 X"
+      y:
+        name: "Target 2 Y"
+      z:
+        name: "Target 2 Z"
+    target_3:
+      x:
+        name: "Target 3 X"
+      y:
+        name: "Target 3 Y"
+      z:
+        name: "Target 3 Z"
+
+text_sensor:
+  - platform: ld6002b
+    ld6002b_id: ld6002b_radar
+    work_mode:
+      name: "Work Mode"
+      entity_category: diagnostic
+    ota_version:
+      name: "Radar Firmware Version"
+      entity_category: diagnostic
+
+switch:
+  - platform: ld6002b
+    ld6002b_id: ld6002b_radar
+    target_display:
+      id: ld6002b_target_display
+      name: "Target Display"
+      entity_category: config
+
+button:
+  - platform: restart
+    name: "Restart"
