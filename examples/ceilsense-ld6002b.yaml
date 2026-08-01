@@ -38,6 +38,11 @@ external_components:
   - source: github://smarthomeshop/ld6002b@main
     components: [ld6002b]
 
+packages:
+  mounting: github://smarthomeshop/radar-mounting/packages/mounting/ceiling.yaml@main
+  radar_profile: github://smarthomeshop/radar-mounting/packages/radars/ld6002b.yaml@main
+  radar_ceiling_mode: !include ../packages/ld6002b-ceiling-mode.yaml
+
 logger:
   baud_rate: 115200
   hardware_uart: UART0

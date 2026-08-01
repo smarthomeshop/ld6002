@@ -35,6 +35,22 @@ See `examples/` for a complete configuration with sensors, tracking targets
 and the module boot pin handling. For internal use in SmartHomeShop firmware;
 no support is provided for use outside SmartHomeShop products.
 
+## Universal ceiling profile
+
+LD6002B products can use the same mounting contract as LD2450 and LD2460:
+
+```yaml
+packages:
+  mounting: github://smarthomeshop/radar-mounting/packages/mounting/ceiling.yaml@main
+  radar_profile: github://smarthomeshop/radar-mounting/packages/radars/ld6002b.yaml@main
+  radar_ceiling_mode: github://smarthomeshop/ld6002b/packages/ld6002b-ceiling-mode.yaml@main
+```
+
+This describes floor projection, metre-to-mm conversion, three-dimensional
+coordinates and three targets. The final package creates the LD6002B
+`installation_mode` select and sets it to `top` after startup; the generic
+mounting package itself never sends radar-specific commands.
+
 ## Updating the vendored component
 
 Pull the latest from the upstream PR branch and re-pin:

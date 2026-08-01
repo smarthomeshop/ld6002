@@ -410,7 +410,7 @@ void LD6002BComponent::dump_config() {
   ESP_LOGCONFIG(TAG, "HLK-LD6002B:");
   ESP_LOGCONFIG(TAG, "  Auto wake: %s", this->auto_wake_ ? "true" : "false");
   if (this->throttle_ms_ > 0) {
-    ESP_LOGCONFIG(TAG, "  Throttle: %ums", this->throttle_ms_);
+    ESP_LOGCONFIG(TAG, "  Throttle: %" PRIu32 "ms", this->throttle_ms_);
   }
 #ifdef USE_SENSOR
   LOG_SENSOR("  ", "Target Count", this->target_count_sensor_);

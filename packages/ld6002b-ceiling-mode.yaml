@@ -1,0 +1,20 @@
+# Configure an LD6002B component for top/ceiling installation.
+
+substitutions:
+  ld6002b_component_id: ld6002b_radar
+
+select:
+  - platform: ld6002b
+    ld6002b_id: ${ld6002b_component_id}
+    installation_mode:
+      id: ld6002b_installation_mode
+      name: "Radar Installation Mode"
+
+esphome:
+  on_boot:
+    - priority: -50
+      then:
+        - delay: 3s
+        - select.set:
+            id: ld6002b_installation_mode
+            option: top
