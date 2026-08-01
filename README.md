@@ -41,8 +41,8 @@ LD6002B products can use the same mounting contract as LD2450 and LD2460:
 
 ```yaml
 packages:
-  mounting: github://smarthomeshop/radar-mounting/packages/mounting/ceiling.yaml@main
-  radar_profile: github://smarthomeshop/radar-mounting/packages/radars/ld6002b.yaml@main
+  mounting: github://smarthomeshop/radar-mounting/packages/mounting/ceiling.yaml@v1.0.0
+  radar_profile: github://smarthomeshop/radar-mounting/packages/radars/ld6002b.yaml@v1.0.0
   radar_ceiling_mode: github://smarthomeshop/ld6002b/packages/ld6002b-ceiling-mode.yaml@main
 ```
 
