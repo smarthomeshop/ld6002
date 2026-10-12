@@ -5,18 +5,26 @@ ESPHome external component for the Hi-Link HLK-LD6002B 60GHz mmWave radar
 products.
 
 ESPHome has no built-in LD6002B support yet. This component is vendored from
-the pending upstream pull request
+the upstream pull request
 [esphome/esphome#13532](https://github.com/esphome/esphome/pull/13532) by
 [@hepter](https://github.com/hepter), pinned at commit `52e0219`, so our
-firmware builds do not depend on an open PR that can change or be rebased at
-any time. All credit for the component goes to the original author. Licensed
-under the ESPHome License (C++ under GPLv3, Python under MIT), see LICENSE.
+firmware builds do not depend on a branch that can change or be rebased. The
+upstream pull request was closed without merging on 23 July 2026. All credit
+for the component goes to the original author. Licensed under the ESPHome
+License (C++ under GPLv3, Python under MIT), see LICENSE.
+
+## Support status
+
+`v0.1.0-beta.1` is an experimental prerelease. Its example configuration and
+complete ESP32-S3 firmware build are validated with ESPHome 2026.7.3, but the
+radar protocol and tracking behavior still require repeatable tests on physical
+LD6002B hardware before a stable `v0.1.0` release is appropriate.
 
 ## Usage
 
 ```yaml
 external_components:
-  - source: github://smarthomeshop/ld6002b@main
+  - source: github://smarthomeshop/ld6002b@v0.1.0-beta.1
     components: [ld6002b]
 
 uart:
@@ -43,7 +51,7 @@ LD6002B products can use the same mounting contract as LD2450 and LD2460:
 packages:
   mounting: github://smarthomeshop/radar-mounting/packages/mounting/ceiling.yaml@v1.0.0
   radar_profile: github://smarthomeshop/radar-mounting/packages/radars/ld6002b.yaml@v1.0.0
-  radar_ceiling_mode: github://smarthomeshop/ld6002b/packages/ld6002b-ceiling-mode.yaml@main
+  radar_ceiling_mode: github://smarthomeshop/ld6002b/packages/ld6002b-ceiling-mode.yaml@v0.1.0-beta.1
 ```
 
 This describes floor projection, metre-to-mm conversion, three-dimensional
