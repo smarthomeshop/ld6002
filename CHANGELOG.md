@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Added experimental ESPHome UART decoding for LD6002C fall and presence
+  reports and for LD6002 breathing and heart rate reports.
+- Documented CeilSense Mini wiring and the LD6002B and LD6002C ceiling tests.
+
 ## [v0.1.0-beta.1] - 2026-10-12
 
 - Published the first immutable experimental package release for the LD6002B.

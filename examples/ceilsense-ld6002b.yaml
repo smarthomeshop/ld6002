@@ -35,7 +35,9 @@ esp32:
     type: esp-idf
 
 external_components:
-  - source: github://smarthomeshop/ld6002b@v0.1.0-beta.1
+  - source:
+      type: local
+      path: ../components
     components: [ld6002b]
 
 packages:
