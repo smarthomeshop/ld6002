@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Switched the LD6002B example to the built-in ESPHome driver (2026.8.0 or newer).
 - Added experimental ESPHome UART decoding for LD6002C fall and presence
   reports and for LD6002 breathing and heart rate reports.
 - Documented CeilSense Mini wiring and the LD6002B and LD6002C ceiling tests.

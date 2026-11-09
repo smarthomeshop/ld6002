@@ -1,6 +1,6 @@
 # CeilSense + HLK-LD6002B example configuration.
 #
-# Wiring (CeilSense schematic):
+# Wiring for the ESP32-S3 example:
 #   module TX0 -> ESP GPIO15, module RX0 -> ESP GPIO16 (UART, 115200 baud)
 #   module P19/BOOT1 -> ESP GPIO4 (must stay LOW in normal operation)
 #   module TX2 (raw presence) -> ESP GPIO5
@@ -8,6 +8,7 @@
 esphome:
   name: ceilsense-ld6002b
   friendly_name: CeilSense LD6002B
+  min_version: 2026.8.0
   includes:
     - <driver/gpio.h>
   on_boot:
@@ -33,12 +34,6 @@ esp32:
   board: esp32-s3-devkitc-1
   framework:
     type: esp-idf
-
-external_components:
-  - source:
-      type: local
-      path: ../components
-    components: [ld6002b]
 
 packages:
   mounting: github://smarthomeshop/radar-mounting/packages/mounting/ceiling.yaml@v1.0.0
@@ -76,9 +71,6 @@ uart:
 ld6002b:
   id: ld6002b_radar
   uart_id: uart_ld6002b
-  auto_wake: false
-  throttle: 2s
-  max_data_len: 4096
 
 binary_sensor:
   - platform: gpio
@@ -113,24 +105,34 @@ sensor:
     target_1:
       x:
         name: "Target 1 X"
+        filters: &target_position_filters
+          - throttle_with_priority: 2s
       y:
         name: "Target 1 Y"
+        filters: *target_position_filters
       z:
         name: "Target 1 Z"
+        filters: *target_position_filters
     target_2:
       x:
         name: "Target 2 X"
+        filters: *target_position_filters
       y:
         name: "Target 2 Y"
+        filters: *target_position_filters
       z:
         name: "Target 2 Z"
+        filters: *target_position_filters
     target_3:
       x:
         name: "Target 3 X"
+        filters: *target_position_filters
       y:
         name: "Target 3 Y"
+        filters: *target_position_filters
       z:
         name: "Target 3 Z"
+        filters: *target_position_filters
 
 text_sensor:
   - platform: ld6002b
