@@ -1,11 +1,12 @@
 # LD6002 family for ESPHome
 
-External components for the Hi-Link HLK-LD6002 family of 60 GHz radars.
+ESPHome configurations and components for the Hi-Link HLK-LD6002 family of
+60 GHz radars.
 
 | Module | ESPHome configuration | Reports | Mini or CeilSense example |
 | --- | --- | --- | --- |
 | HLK-LD6002 | `ld6002:` with `model: ld6002` | Breathing rate and heart rate | [LD6002](examples/ceilsense-mini-ld6002.yaml) |
-| HLK-LD6002B | `ld6002b:` | Presence, up to three XYZ targets and detection areas | [LD6002B](examples/ceilsense-ld6002b.yaml) |
+| HLK-LD6002B | Built-in `ld6002b:` in ESPHome 2026.8.0 or newer | Presence, up to three XYZ targets and detection areas | [LD6002B](examples/ceilsense-ld6002b.yaml) |
 | HLK-LD6002C | `ld6002:` with `model: ld6002c` | Presence, fall status and depth below the radar | [LD6002C](examples/ceilsense-mini-ld6002c.yaml) |
 
 The LD6002 and LD6002C profiles are experimental and read-only. The stock
@@ -68,15 +69,11 @@ and `wifi_password`, then run `esphome compile examples/<example>.yaml`.
 
 ## LD6002B
 
-The existing `ld6002b:` platform, ceiling package and `v0.1.0-beta.1` release
-are preserved. The old repository URL can still be used by existing Git-based
-ESPHome configurations. Use the new URL for new configurations.
+Use the [built-in ESPHome LD6002B component](https://esphome.io/components/sensor/ld6002b/)
+with ESPHome 2026.8.0 or newer. The example pins below match the ESP32-S3
+example. Use the radar UART pins for your board.
 
 ```yaml
-external_components:
-  - source: github://smarthomeshop/ld6002@v0.1.0-beta.1
-    components: [ld6002b]
-
 uart:
   id: uart_ld6002b
   tx_pin: GPIO16
@@ -86,12 +83,18 @@ uart:
 ld6002b:
   id: ld6002b_radar
   uart_id: uart_ld6002b
-  throttle: 2s
 ```
 
-See the [complete B example](examples/ceilsense-ld6002b.yaml) for entity
-configuration, module boot handling and target reporting. Match the example
-pins to your CeilSense board.
+When migrating an existing configuration, remove `ld6002b` from
+`external_components` and remove `throttle` and `max_data_len` from
+`ld6002b:`. Use per-sensor filters for reporting intervals and rename any
+`dop_idx` sensor keys to `doppler_index`. If your board has no `wakeup_pin`
+configured, omit `auto_wake` and `wakeup_pulse_ms`. Keep `ld6002` in
+`external_components` if you also use an LD6002 or LD6002C.
+
+The [complete B example](examples/ceilsense-ld6002b.yaml) shows the entities,
+module boot handling and target reporting. The vendored B driver remains
+available at `v0.1.0-beta.1` for firmware built with older ESPHome versions.
 
 ### Ceiling profile
 
@@ -108,6 +111,7 @@ for Room Designer.
 
 ### Upstream and license
 
-The LD6002B implementation is vendored from [ESPHome PR #13532](https://github.com/esphome/esphome/pull/13532)
-by [@hepter](https://github.com/hepter) at commit `52e0219`. The ESPHome
-license applies (C++ GPLv3 and Python MIT). See [LICENSE](LICENSE).
+The legacy LD6002B implementation is vendored from
+[ESPHome PR #13532](https://github.com/esphome/esphome/pull/13532) by
+[@hepter](https://github.com/hepter) at commit `52e0219`. The ESPHome license
+applies (C++ GPLv3 and Python MIT). See [LICENSE](LICENSE).
